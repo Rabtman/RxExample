@@ -9,8 +9,13 @@ import java.util.List;
  * description:
  */
 
-public class WatchedImpl implements Watched {
+public class Customer implements Watched {
+    private String name;
     private List<Watcher> watchers = new ArrayList<Watcher>();
+
+    public Customer(String name) {
+        this.name = name;
+    }
 
     @Override
     public void addWatcher(Watcher watcher) {
@@ -25,7 +30,7 @@ public class WatchedImpl implements Watched {
     @Override
     public void notifyWatchers(String str) {
         for (Watcher watcher : watchers) {
-            watcher.update(str);
+            watcher.update("Customer-" + name + "-" + str);
         }
     }
 }

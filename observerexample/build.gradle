@@ -3,6 +3,8 @@ apply plugin: 'java'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'io.reactivex:rxjava:1.1.6'
+    //android上使用还要添加这个
+    compile 'io.reactivex:rxandroid:1.2.1'
 }
 
 sourceCompatibility = "1.6"

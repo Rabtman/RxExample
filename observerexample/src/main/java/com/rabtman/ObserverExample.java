@@ -1,49 +1,89 @@
 package com.rabtman;
 
 import com.rabtman.normal.Watched;
-import com.rabtman.normal.WatchedImpl;
 import com.rabtman.normal.Watcher;
-import com.rabtman.normal.WatcherImpl;
-import com.rabtman.observable.MyObservable;
-import com.rabtman.observable.MyObserver;
+import com.rabtman.observable.Customer;
+import com.rabtman.observable.Waiter;
 
 import rx.Observable;
+import rx.Observer;
 import rx.Subscriber;
 
 public class ObserverExample {
+
+    Observer<String> E = new Observer<String>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(String s) {
+            System.out.println("Waiter-E: " + s);
+        }
+    };
+    Subscriber<String> F = new Subscriber<String>() {
+        @Override
+        public void onCompleted() {
+
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onNext(String s) {
+            System.out.println("Waiter-F: " + s);
+        }
+    };
+
     public static void main(String[] var0) {
-        //普通版观察者模式
-        Watched watched = new WatchedImpl();
-        Watcher A = new WatcherImpl();
-        Watcher B = new WatcherImpl();
+        normal();
+        System.out.println("----------------------------");
+        javaApi();
+        System.out.println("----------------------------");
+        rxJava();
+    }
+
+    //自己实现的观察者模式
+    private static void normal() {
+        Watched watched = new com.rabtman.normal.Customer("Rabtman");
+        Watcher A = new com.rabtman.normal.Waiter("A");
+        Watcher B = new com.rabtman.normal.Waiter("B");
 
         watched.addWatcher(A);
         watched.addWatcher(B);
 
-        watched.notifyWatchers("help!");
+        watched.notifyWatchers("order dishes!");
+    }
 
-        System.out.println("----------------------------");
-        //java api
-        MyObservable myObservable = new MyObservable();
-        MyObserver C = new MyObserver(myObservable);
-        MyObserver D = new MyObserver(myObservable);
+    private static void javaApi() {
+        Customer customer = new Customer("Rabtman");
+        Waiter C = new Waiter("C", customer);
+        Waiter D = new Waiter("D", customer);
 
-        myObservable.sendMsg("help help!!");
+        customer.call("order dishes!!");
+    }
 
-        System.out.println("----------------------------");
-
-        //rxjava
-        Observable<String> rxObservable = Observable.create(
+    private static void rxJava() {
+        Observable<String> customer = Observable.create(
                 new Observable.OnSubscribe<String>() {
                     @Override
                     public void call(Subscriber<? super String> subscriber) {
-                        subscriber.onNext("help help help!!!");
+                        subscriber.onNext("Customer-Rabtman-order dishes!!!");
                         subscriber.onCompleted();
                     }
                 }
         );
 
-        Subscriber<String> E = new Subscriber<String>() {
+        Observer<String> E = new Observer<String>() {
             @Override
             public void onCompleted() {
 
@@ -56,7 +96,7 @@ public class ObserverExample {
 
             @Override
             public void onNext(String s) {
-                System.out.println(s);
+                System.out.println("Waiter-E: " + s);
             }
         };
 
@@ -73,11 +113,11 @@ public class ObserverExample {
 
             @Override
             public void onNext(String s) {
-                System.out.println(s);
+                System.out.println("Waiter-F: " + s);
             }
         };
 
-        rxObservable.subscribe(E);
-        rxObservable.subscribe(F);
+        customer.subscribe(E);
+        customer.subscribe(F);
     }
 }

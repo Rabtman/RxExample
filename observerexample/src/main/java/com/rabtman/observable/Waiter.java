@@ -7,14 +7,17 @@ import java.util.Observer;
  * @author Rabtman
  */
 
-public class MyObserver implements Observer {
+public class Waiter implements Observer {
 
-    public MyObserver(MyObservable observable) {
+    private String name;
+
+    public Waiter(String name, Customer observable) {
+        this.name = name;
         observable.addObserver(this);
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        System.out.println(((MyObservable) o).getMsg());
+        System.out.println("Waiter-" + name + ": " + ((Customer) o).getOrder());
     }
 }
