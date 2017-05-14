@@ -1,1 +1,1 @@
-include ':rx-example', ':observerexample'
+include ':rx-example', ':rx2-example', ':observerexample'
